@@ -1,5 +1,31 @@
 .fixView{
   position: fixed;
-  bottom: 10%;
-  right: 10%;
+  bottom: 12%;
+  right: 5%;
+}
+.btn{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 96%;
+  margin: 2%;
+}
+.swpItem{
+  padding: 1%;
+}
+.pop-fix1{
+  position: fixed;
+  bottom: 25%;
+  right: 5%;
+}
+.pop-fix2{
+  position: fixed;
+  bottom: 25%;
+  right: 5%;
+}
+.pop-fix3{
+  position: fixed;
+  bottom: 12%;
+  right: 25%;
 }
