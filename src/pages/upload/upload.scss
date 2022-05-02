@@ -1,0 +1,18 @@
+@import "~taro-ui/dist/style/components/input.scss";
+@import "~taro-ui/dist/style/components/icon.scss";
+@import "~taro-ui/dist/style/components/textarea.scss";
+@import "~taro-ui/dist/style/components/form.scss";
+@import "~taro-ui/dist/style/components/button.scss";
+@import "~taro-ui/dist/style/components/card.scss";
+
+.container{
+    margin: 5%;
+}
+.title{
+    border-left: aqua solid;
+    padding-left: 5px;
+    margin-bottom: 20px;
+}
+.mt{
+    margin-top: 15px;
+}
