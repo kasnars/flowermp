@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtList, AtListItem } from 'taro-ui'
 import {
@@ -9,6 +10,7 @@ import {
 } from '@tarojs/taro'
 import './hot.scss'
 import { useState } from 'react'
+import { getAllData } from '../../api/api'
 // import Cardlist from '../../components/cardlist/cardlist'
 
 function Hot() {
@@ -33,7 +35,7 @@ function Hot() {
     // 详情可查阅：【Hooks】
     usePullDownRefresh(() => { })
 
-    const getDataList = () => {
+    const getDataList = async() => {
         const res = [
             { title: 'redian', note: '花中贵族', id: 1 },
             { title: '玫瑰', note: '花中贵族23123', id: 2 },
@@ -42,8 +44,13 @@ function Hot() {
             { title: '蓝色妖姬', note: '花中驱蚊器贵族', id: 5 },
             { title: '牡丹', note: '花中贵恶气恶气族', id: 6 },
         ]
-        setDataList(res)
+        const {data} = await getAllData()
+        console.log(data.data.slice(-5));
+        setDataList(data.data.slice(-5))
 
+    }
+    const toPage = (id) => {
+        Taro.navigateTo({ url: `/pages/detail/detail?id=${id}&from=1` })
     }
 
     return (
@@ -52,7 +59,8 @@ function Hot() {
                 {
                     dataList.map(item => {
                         return (
-                            <AtListItem title={item.title} note={item.note} key={item.id} onClick={() => toPage(item.id)} arrow='right' />
+                            <AtListItem title={item.flowerTag} note={item.flowerDescript && item.flowerDescript.slice(0,30)+'...'} 
+                            key={item.id} onClick={() => toPage(item.id)} arrow='right' />
                         )
                     })
                 }

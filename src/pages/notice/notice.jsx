@@ -76,7 +76,7 @@ function Notice() {
                 content='软件工程1806 - 刘杨鑫'
             />
 
-            <AtAccordion title='关于小程序' icon={{ value: 'chevron-down', color: 'red', size: '15' }} open={isOpen} onClick = {() => setIsOpen(!isOpen)}>
+            {/* <AtAccordion title='关于小程序' icon={{ value: 'chevron-down', color: 'red', size: '15' }} open={isOpen} onClick = {() => setIsOpen(!isOpen)}>
                 <AtList hasBorder={false}>
                     <AtListItem
                         title='功能介绍'
@@ -100,7 +100,33 @@ function Notice() {
                         onClick={() => setAboutMe(true)}
                     />
                 </AtList>
-            </AtAccordion>
+            </AtAccordion> */}
+            <AtList>
+                <AtListItem
+                    title='功能介绍'
+                    note='本作品所拥有的功能'
+                    extraText='详细信息'
+                    arrow='right'
+                    iconInfo={{ size: 25, color: '#78A4FA', value: 'calendar', }}
+                    onClick={() => setAboutApp(true)}
+                />
+                <AtListItem
+                    title='相关技术'
+                    note='本作品所用技术栈'
+                    extraText='详细信息'
+                    arrow='right'
+                    iconInfo={{ size: 25, color: '#FF4949', value: 'bookmark', }}
+                    onClick={() => setAboutJs(true)}
+                />
+                <AtListItem
+                    title='关于作者'
+                    note='关于开发者'
+                    extraText='详细信息'
+                    arrow='right'
+                    iconInfo={{ size: 25, color: '#FF4949', value: 'bookmark', }}
+                    onClick={() => setAboutMe(true)}
+                />
+            </AtList>
         </view>
     )
 }

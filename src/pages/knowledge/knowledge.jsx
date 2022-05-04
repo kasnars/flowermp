@@ -9,6 +9,7 @@ import {
 } from '@tarojs/taro'
 import './knowledge.scss'
 import { useState } from 'react'
+import { getFlowerData } from '../../api/api'
 
 function Knowledge() {
     // 可以使用所有的 React Hooks
@@ -29,15 +30,19 @@ function Knowledge() {
     // // Taro 对所有小程序页面生命周期都实现了对应的自定义 React Hooks 进行支持
     // // 详情可查阅：【Hooks】
     // usePullDownRefresh(() => { })
-    const getData = () => {
-        const artData = {
-            title:'这是一级标题这是一级标题',
-            time:'2017-05-07',
-            author:'这是作者',
-            img:'https://jdc.jd.com/img/400x400',
-            content:'这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本落。这是文本段落。1234567890123456789012345678901234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        }
-        setData(artData)
+    const getData = async() => {
+        const {data} = await getFlowerData({
+            id:6
+        })
+        console.log(data.data);
+        // const artData = {
+        //     title:'这是一级标题这是一级标题',
+        //     time:'2017-05-07',
+        //     author:'这是作者',
+        //     img:'https://jdc.jd.com/img/400x400',
+        //     content:'这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本落。这是文本段落。1234567890123456789012345678901234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        // }
+        setData(data.data)
         console.log('setData');
     }
 
@@ -45,21 +50,23 @@ function Knowledge() {
         <view style={{margin:'5%'}}>
         <view className='at-article'>
             <view className='at-article__h1'>
-                {data.title}
+                    {data.flowerTag}
             </view>
             <view className='at-article__info'>
-                {data.time}&nbsp;&nbsp;&nbsp;{data.author}
+                    {data.createTime ? data.createTime.split('T')[0]:'时间不明'}
+                    &nbsp;&nbsp;&nbsp;
+                    {data.dataSource == 1?'系统自动录入':'用户上传'}
             </view>
             <view className='at-article__content'>
                 <image
                     className='at-article__img'
-                    src={data.img}
+                        src={data.flowerImg}
                     mode='widthFix' />
                 <view className='at-article__section'>
                     {/* <view className='at-article__h2'>这是二级标题</view>
                     <view className='at-article__h3'>这是三级标题</view> */}
                     <view className='at-article__p'>
-                        {data.content}
+                            {data.flowerDescript}
                     </view>
 
                 </view>

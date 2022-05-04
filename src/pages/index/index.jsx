@@ -20,6 +20,7 @@ import "taro-ui/dist/style/components/message.scss";
 import "taro-ui/dist/style/components/fab.scss";
 import "taro-ui/dist/style/components/grid.scss";
 import './index.scss'
+import { getDataByName } from '../../api/api'
 
 
 export default class Index extends Component {
@@ -56,13 +57,27 @@ export default class Index extends Component {
         {
           image: 'https://img30.360buyimg.com/jdphoto/s72x72_jfs/t5770/97/5184449507/2423/294d5f95/595c3b4dNbc6bc95d.png',
           value: '我的收藏',
-          url: '/pages/like/like'
+          url: '../like/like'
         },
         {
           image: 'https://img12.360buyimg.com/jdphoto/s72x72_jfs/t10660/330/203667368/1672/801735d7/59c85643N31e68303.png',
           value: '版本说明',
           url: '/pages/notice/notice'
         },
+      ],
+      headerList:[
+        {
+          img:'https://bkimg.cdn.bcebos.com/pic/72f082025aafa40f4bfb1bde5328144f78f0f736b329',
+          id:26
+        },
+        {
+          img:'https://bkimg.cdn.bcebos.com/pic/08f790529822720e2a7ec09b79cb0a46f21fab1a',
+          id:27
+        },
+        {
+          img:'https://bkimg.cdn.bcebos.com/pic/63d9f2d3572c11dfa9ec066de06e75d0f703918f6461',
+          id:29
+        }
       ]
     }
   }
@@ -71,18 +86,53 @@ export default class Index extends Component {
       value: value
     })
   }
-  onActionClick() {
-    console.log('开始搜索')
-    this.handleClick('success')
+  async onActionClick() {
+    console.log('开始搜索',this.state.value)
+    const {data} = await getDataByName({
+      name: this.state.value
+    })
+    if (data.data) {
+      Taro.navigateTo({ url: `/pages/detail/detail?id=${data.data.id}&from=1` })
+    } else {
+      Taro.atMessage({
+        'message': '数据库未收录该花卉',
+        'type': 'error',
+      })
+    }
+    console.log(data.data);
+    // this.handleClick('success')
   }
   selectPhoto(){
+    // Taro.chooseImage({
+    //   count: 1, // 默认9
+    //   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+    //   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有，在H5浏览器端支持使用 `user` 和 `environment`分别指定为前后摄像头
+    //   success: function (res) {
+    //     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+    //     var tempFilePaths = res.tempFilePaths
+    //     console.log(tempFilePaths);
+    //   }
+    // })
     Taro.chooseImage({
-      count: 1, // 默认9
-      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有，在H5浏览器端支持使用 `user` 和 `environment`分别指定为前后摄像头
-      success: function (res) {
-        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-        var tempFilePaths = res.tempFilePaths
+      success(res) {
+        const tempFilePaths = res.tempFilePaths
+        console.log(tempFilePaths[0]);
+        Taro.uploadFile({
+          url: 'https://kasnars.club/upload', //仅为示例，非真实的接口地址
+          filePath: tempFilePaths[0],
+          name: 'file',
+          formData: {
+            'user': 'test'
+          },
+          success(res) {
+            const data = JSON.parse(res.data)
+            console.log(data,'resss');
+            console.log(typeof data,'type');
+            //do something
+            Taro.navigateTo({ url: `/pages/detail/detail?data=${data.url}` })
+            
+          }
+        })
       }
     })
   }
@@ -98,6 +148,11 @@ export default class Index extends Component {
     Taro.navigateTo({
       url:item.url
     })
+  }
+
+  toDetail(id){
+    console.log(id);
+    Taro.navigateTo({ url: `/pages/detail/detail?id=${id}&from=1` })
   }
 
   componentWillMount () { }
@@ -148,8 +203,7 @@ export default class Index extends Component {
             indicatorDots
             autoplay
           >
-            <SwiperItem className='swpItem'>
-              {/* <View className='demo-text-1'>1</View> */}
+            {/* <SwiperItem className='swpItem'>
 
               <image src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fnimg.ws.126.net%2F%3Furl%3Dhttp%253A%252F%252Fdingyue.ws.126.net%252F2021%252F0925%252F44cd872dj00qzz1gc000pc000hs00bgg.jpg%26thumbnail%3D650x2147483647%26quality%3D80%26type%3Djpg&refer=http%3A%2F%2Fnimg.ws.126.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1647202924&t=406abe74669a09aad569b3bf51abdbf7'
                   style='width: 100%;height: 100%'
@@ -157,12 +211,26 @@ export default class Index extends Component {
 
               
             </SwiperItem>
+
             <SwiperItem>
-              <View className='demo-text-2'>2</View>
+              <image src='https://bkimg.cdn.bcebos.com/pic/72f082025aafa40f4bfb1bde5328144f78f0f736b329'
+                  style='width: 100%;height: 100%'
+                  alt="" />
             </SwiperItem>
             <SwiperItem>
               <View className='demo-text-3'>3</View>
-            </SwiperItem>
+            </SwiperItem> */}
+            {
+                this.state.headerList.map(item => {
+                  return(
+                    <SwiperItem className='swpItem' onClick={this.toDetail.bind(this,item.id)}>
+                      <image src={item.img}
+                        style='width: 100%;height: 100%'
+                        alt="" />
+                    </SwiperItem>
+                  )
+                })
+            }
           </Swiper>
         </view>
 

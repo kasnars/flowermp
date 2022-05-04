@@ -10,7 +10,9 @@ import {
 import './like.scss'
 import { useState } from 'react'
 import Cardlist from '../../components/cardlist/cardlist'
-import { testGet } from '../../api/api'
+import { getLikeList } from '../../api/api'
+// import { getLikeList, testGet } from '../../api/api'
+// import {} from '/'
 
 function Like() {
     // 可以使用所有的 React Hooks
@@ -18,7 +20,7 @@ function Like() {
     useEffect(() => {
         getDataList()
         // console.log(dataList, '2222');
-        testGet()
+        testHttp()
     }, [])
 
     // 对应 onReady
@@ -35,7 +37,7 @@ function Like() {
     // 详情可查阅：【Hooks】
     usePullDownRefresh(() => { })
 
-    const getDataList = () => {
+    const getDataList = async() => {
         const res = [
             { title: '牡丹', note: '花中贵族', id: 1 },
             { title: '玫瑰', note: '花中贵族23123', id: 2 },
@@ -44,8 +46,24 @@ function Like() {
             { title: '蓝色妖姬', note: '花中驱蚊器贵族', id: 5 },
             { title: '牡丹', note: '花中贵恶气恶气族', id: 6 },
         ]
-        setDataList(res)
+        let { data } = await getLikeList({
+            userId: 1
+        })
+        console.log(data.data, 'htp');
+
+        setDataList(data.data)
         
+    }
+
+    const testHttp = async() => {
+        
+        let { data } = await getLikeList({
+            userId:1
+        })
+        console.log(data.data,'htp');
+        // testGet.then(res => {
+        //     console.log(res,'inhh');
+        // })
     }
 
     return (

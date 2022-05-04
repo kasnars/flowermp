@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { View } from '@tarojs/components'
-import { AtTag, AtTimeline, AtInput, AtForm, AtTextarea, AtButton, AtCard } from 'taro-ui'
+import { AtTag, AtTimeline, AtInput, AtForm, AtTextarea, AtButton, AtCar, AtMessage } from 'taro-ui'
+import Taro from '@tarojs/taro'
 import {
     useReady,
     useDidShow,
@@ -9,6 +10,7 @@ import {
 } from '@tarojs/taro'
 import './upload.scss'
 import { useState } from 'react'
+import { postData } from '../../api/api'
 
 function Upload() {
     // 可以使用所有的 React Hooks
@@ -33,9 +35,20 @@ function Upload() {
     const changeTitle = (e) => {
         setTitle(e);
     }
-    const onSubmit = () => {
+    const onSubmit = async() => {
+        const res = await postData({
+            name:title,
+            content,
+        })
         console.log(title);
         console.log(content);
+        if ( res) {
+            Taro.atMessage({
+                'message': '上传成功',
+                'type': 'success',
+            })
+            onReset()
+        }
     }
     const onReset = () => {
         setTitle('')
@@ -46,7 +59,7 @@ function Upload() {
     return (
         <view className='container'>
 
-
+            <AtMessage />
             <AtForm
                 // onSubmit={() =>onSubmit}
                 // onReset={() => onReset}

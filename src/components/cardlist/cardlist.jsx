@@ -41,7 +41,7 @@ function Cardlist({dataList}) {
 
     const toPage = (id) => {
         console.log(id);
-        Taro.navigateTo({url:`/pages/detail/detail?id=${id}`})
+        Taro.navigateTo({url:`/pages/detail/detail?id=${id}&from=1`})
     }
 
     return (
@@ -50,7 +50,7 @@ function Cardlist({dataList}) {
                 {
                     list.map(item => {
                         return(
-                            <AtListItem title={item.title} note={item.note} key={item.id} onClick={() => toPage(item.id)} arrow='right' />
+                            <AtListItem title={item.flowerTitle} note={item.flowerContent && item.flowerContent.slice(0,30) + '....'} key={item.id} onClick={() => toPage(item.flowerId)} arrow='right' />
                         )
                     })
                 }
