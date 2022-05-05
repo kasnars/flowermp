@@ -171,11 +171,11 @@ export default class Index extends Component {
   pop(){
     return (
       <view >
-        <AtFab className='pop-fix1'>
-          <Text className='at-fab__icon at-icon at-icon-menu'></Text>
+        <AtFab className='pop-fix1' onClick={() => Taro.navigateTo({ url: `/pages/like/like` })}>
+          <Text className='at-fab__icon at-icon at-icon-star-2'></Text>
         </AtFab>
-        <AtFab className='pop-fix3'>
-          <Text className='at-fab__icon at-icon at-icon-menu'></Text>
+        <AtFab className='pop-fix3' onClick={() => Taro.navigateTo({ url: `/pages/upload/upload` })}>
+          <Text className='at-fab__icon at-icon at-icon-upload'></Text>
         </AtFab>
       </view>
     )
@@ -246,14 +246,14 @@ on
             circle onClick={this.selectPhoto.bind(this)}>点击拍照</AtButton>
 
           <view className='fixView'>
-            <AtFab onClick={() => this.setState({ popBtnShow:!this.popBtnShow})}>
+            <AtFab onClick={() => this.setState({ popBtnShow:!this.state.popBtnShow})}>
               <Text className='at-fab__icon at-icon at-icon-menu'></Text>
             </AtFab>
           </view>
 
         </view>
         {
-          this.popBtnShow && this.pop()
+          this.state.popBtnShow && this.pop()
         }
       </>
     )

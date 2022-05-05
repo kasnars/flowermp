@@ -10,14 +10,14 @@ import {
 } from '@tarojs/taro'
 import './detail.scss'
 import { useState } from 'react'
-import { addLike, getAi, getFlowerData } from '../../api/api'
+import { addHistory, addLike, getAi, getFlowerData } from '../../api/api'
 import { useLayoutEffect } from 'react'
 
 function Knowledge() {
     // 可以使用所有的 React Hooks
     const [data, setData] = useState({})
     const [org, setOrg] = useState(0)
-    const [resindex, setResIndex ] = useState(1)
+    const [resindex, setResIndex ] = useState(0)
     // const [res,setRes] = useState([])
     useEffect(() => {
         let from = Taro.getCurrentInstance().router.params.from
@@ -38,6 +38,16 @@ function Knowledge() {
         }
 
     }, [])
+
+    useEffect((resIndex) => {
+        const idata = Taro.getCurrentInstance().router.params.data
+        // console.log(data, 'datain');
+        // let parse = Object.assign({},data)
+        // parse = JSON.parse(parse)
+        // console.log(parse.url,'indata');
+        ai(idata)
+        addHis()
+    },[resindex])
 
     // // 对应 onReady
     useReady(() => {
@@ -70,7 +80,7 @@ function Knowledge() {
         // if (res.length) {
         //     setData(res[0])
         // }
-        setData(inres[0])
+        setData(inres[resindex])
         
     }
 
@@ -92,16 +102,25 @@ function Knowledge() {
         if (org == 1) {
             Taro.navigateBack({ delta: 1})
         } else {
-            let side = res.length
-            if (resindex +1 < side) {
-                setData(res[resindex])
-                setResIndex(resindex+1)
-            } else {
-                Taro.atMessage({
+            if(resindex < 1){
+                setResIndex(resindex + 1)
+            } else{
+                    Taro.atMessage({
                     'message': '没有更多可能性了',
                     'type': 'info',
                 })
             }
+            
+            // let side = res.length
+            // if (resindex +1 < side) {
+            //     // setData(res[resindex])
+            //     setResIndex(resindex+1)
+            // } else {
+            //     Taro.atMessage({
+            //         'message': '没有更多可能性了',
+            //         'type': 'info',
+            //     })
+            // }
         }
     }
     const toLike = async() => {
@@ -118,21 +137,27 @@ function Knowledge() {
             })
         }
     }
+    const addHis = async() => {
+        if (Object.values(data).length > 0) {
+            console.log('fasong');
+            const res = await addHistory({
+                userId: 1,
+                flowerName: data.flowerTag,
+                flowerContent: data.flowerDescript
+            })
+        }
 
-    return (
-        <view style={{ margin: '5%',position:'relative' }}>
-            <AtMessage />
-            {/* <AtFab style={{position:'absoult', bottom:'10%',right:'10%'}}>
-                <text className='at-fab__icon at-icon at-icon-menu'></text>
-            </AtFab> */}
+}
 
+    const randerData = () => {
+        return(
             <view className='at-article'>
                 <view className='at-article__h1'>
                     {data.flowerTag}
                 </view>
 
                 {
-                    org == 1 ? 
+                    org == 1 ?
                         <view className='at-article__info'>
                             {data.createTime ? data.createTime.split('T')[0] : '时间不明'}
                             &nbsp;&nbsp;&nbsp;
@@ -149,13 +174,17 @@ function Knowledge() {
 
                 <view className='at-article__content'>
                     {
-                        data.flowerImg ? 
+                        data.flowerImg ?
                             <image
                                 className='at-article__img'
                                 src={data.flowerImg}
                                 mode='widthFix' />
-                        :
-                        '暂无参考图片'
+                            :
+                            <view className='at-article__section'>
+                                <view className='at-article__p'>
+                            数据库中暂无参考图片
+                            </view>
+                            </view>
                     }
 
                     <view className='at-article__section'>
@@ -168,6 +197,20 @@ function Knowledge() {
                     </view>
                 </view>
             </view>
+        )
+
+    }
+
+    return (
+        <view style={{ margin: '5%',position:'relative' }}>
+            <AtMessage />
+            {/* <AtFab style={{position:'absoult', bottom:'10%',right:'10%'}}>
+                <text className='at-fab__icon at-icon at-icon-menu'></text>
+            </AtFab> */}
+
+            {
+                randerData() 
+            }
 
             {
                 org == 1 &&
@@ -177,9 +220,9 @@ function Knowledge() {
             }
 
 
-            <AtButton type='primary' circle className='btn' onClick={() => changeData()}>
+            <AtButton type='primary' circle className='btn' onClick={() => changeData()} disabled = {resindex === 1}>
                 {
-                    org == 1 ? '返回上一页' :'不是这个？看看别的可能性'
+                    org == 1 ? '返回上一页' : resindex < 1 ?'不是这个？看看别的可能性':'没有更多可能性了'
                 }
                 
             </AtButton>

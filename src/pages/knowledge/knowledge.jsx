@@ -9,7 +9,7 @@ import {
 } from '@tarojs/taro'
 import './knowledge.scss'
 import { useState } from 'react'
-import { getFlowerData } from '../../api/api'
+import { getAllData, getFlowerData } from '../../api/api'
 
 function Knowledge() {
     // 可以使用所有的 React Hooks
@@ -31,10 +31,15 @@ function Knowledge() {
     // // 详情可查阅：【Hooks】
     // usePullDownRefresh(() => { })
     const getData = async() => {
-        const {data} = await getFlowerData({
-            id:6
-        })
-        console.log(data.data);
+        // const {data} = await getFlowerData({
+        //     id:6
+        // })
+        const {data} = await getAllData()
+        console.log(data.data,'allData');
+        let max = data.data.length-1
+        let index = Math.floor(Math.random() * (max - 0 + 1) + 0)
+        console.log(index,'index');
+        // console.log(data.data);
         // const artData = {
         //     title:'这是一级标题这是一级标题',
         //     time:'2017-05-07',
@@ -42,7 +47,7 @@ function Knowledge() {
         //     img:'https://jdc.jd.com/img/400x400',
         //     content:'这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本段落。这是文本落。这是文本段落。1234567890123456789012345678901234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         // }
-        setData(data.data)
+        setData(data.data[index])
         console.log('setData');
     }
 
@@ -58,10 +63,20 @@ function Knowledge() {
                     {data.dataSource == 1?'系统自动录入':'用户上传'}
             </view>
             <view className='at-article__content'>
-                <image
-                    className='at-article__img'
-                        src={data.flowerImg}
-                    mode='widthFix' />
+                {
+                    data.flowerImg ?
+                            <image
+                                className='at-article__img'
+                                src={data.flowerImg}
+                                mode='widthFix' />
+                    :
+                            <view className='at-article__section'>
+                                <view className='at-article__p' style={{color:'blue'}}>
+                    图片暂未收录
+                    </view>
+                    </view>
+                }
+
                 <view className='at-article__section'>
                     {/* <view className='at-article__h2'>这是二级标题</view>
                     <view className='at-article__h3'>这是三级标题</view> */}

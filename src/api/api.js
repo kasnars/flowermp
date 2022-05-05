@@ -35,3 +35,7 @@ export const getAllData = (data = {}) => {
 export const addLike = (data) => {
     return httpPost('/ai/like',data)
 }
+
+export const addHistory = (data) => {
+    return httpPost('/ai/addHistory',data)
+}
